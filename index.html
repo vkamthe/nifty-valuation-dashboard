@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valuation till 2026 end — Nifty indices</title>
+<style>
+  :root{
+    --surface-0:#f5f6f7; --surface-1:#ececee; --surface-2:#ffffff;
+    --border:rgba(18,22,28,.12); --border-strong:rgba(18,22,28,.22);
+    --text-primary:#16181d; --text-secondary:#565b63; --text-muted:#8a9099;
+    --font-sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    --font-mono:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;
+    --font-voice:var(--font-mono);
+    --ath:#3d82c4; --trend:#c07d2e; --accent:#3d82c4;
+  }
+  html[data-theme="dark"]{
+    --surface-0:#131417; --surface-1:#1f2126; --surface-2:#1c1e22;
+    --border:rgba(255,255,255,.12); --border-strong:rgba(255,255,255,.22);
+    --text-primary:#eceef1; --text-secondary:#b3b8c0; --text-muted:#7c828b;
+    --ath:#5aa0df; --trend:#d99a52; --accent:#5aa0df;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--surface-0);color:var(--text-primary);
+    font-family:var(--font-sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:960px;margin:0 auto;padding:2.5rem 1.25rem 4rem}
+  header{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;margin-bottom:1.5rem}
+  h1{font-size:26px;font-weight:600;margin:0 0 4px;letter-spacing:-.01em}
+  .sub{font-size:13px;color:var(--text-secondary);margin:0}
+  .toggle{background:var(--surface-2);border:1px solid var(--border);color:var(--text-secondary);
+    border-radius:8px;padding:7px 12px;font-size:12px;cursor:pointer;font-family:inherit;white-space:nowrap}
+  .toggle:hover{border-color:var(--border-strong)}
+
+  .method{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;
+    padding:0 1.15rem;margin-bottom:1.5rem}
+  .method summary{cursor:pointer;list-style:none;font-size:15px;font-weight:500;padding:1rem 0;
+    display:flex;align-items:center;justify-content:space-between}
+  .method summary::-webkit-details-marker{display:none}
+  .method summary .chev{color:var(--text-muted);font-size:13px;transition:transform .2s}
+  .method[open] summary .chev{transform:rotate(180deg)}
+  .method .body{padding:0 0 1.15rem;font-size:14px;color:var(--text-secondary);border-top:1px solid var(--border)}
+  .method .body p{margin:.9rem 0 .4rem}
+  .method .body .lead{color:var(--text-primary);margin-top:1rem}
+  .method dl{margin:.4rem 0 0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px}
+  .method dt{font-weight:500;color:var(--text-primary);white-space:nowrap}
+  .method dd{margin:0}
+  .chip{display:inline-block;width:11px;height:11px;border-radius:2px;vertical-align:-1px;margin-right:2px}
+  .formula{font-family:var(--font-mono);font-size:13px;background:var(--surface-1);
+    border-radius:8px;padding:10px 12px;margin:.9rem 0;color:var(--text-primary);overflow-x:auto}
+
+  .panel{background:var(--surface-1);border-radius:12px;padding:1rem 1.15rem;margin-bottom:1.5rem}
+  .panel-h{font-size:13px;color:var(--text-secondary);margin-bottom:8px}
+  .row{display:grid;grid-template-columns:1.4fr 1fr .9fr 1fr;gap:8px 12px;align-items:center}
+  .row .head{font-size:11px;color:var(--text-muted)}
+  .row + .row{margin-top:8px}
+  .fixed{font-family:var(--font-mono);font-size:13px;text-align:right;color:var(--text-secondary)}
+  input[type=number]{width:100%;height:34px;border:1px solid var(--border);background:var(--surface-2);
+    color:var(--text-primary);border-radius:8px;text-align:center;font-family:var(--font-mono);font-size:13px;padding:0 6px}
+  input[type=number]:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+  .card{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.1rem}
+  .card-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px}
+  .card-h .nm{font-size:15px;font-weight:500}
+  .card-h .ct{font-size:11px;color:var(--text-muted)}
+  .foot{font-size:11px;color:var(--text-muted);margin-top:4px;text-align:center;font-family:var(--font-mono)}
+  .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:1.25rem;font-size:12px;color:var(--text-secondary)}
+  .legend span{display:flex;align-items:center;gap:6px}
+  .sw{width:12px;height:8px;border-radius:2px}
+  .tk{width:2px;height:11px}
+  .updated{font-size:11px;color:var(--text-muted);margin-top:.9rem;font-family:var(--font-mono)}
+  .note{margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border);
+    font-size:12px;color:var(--text-muted);line-height:1.7}
+  @media(max-width:520px){ h1{font-size:22px} .wrap{padding:1.75rem 1rem 3rem} .method dl{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Valuation till 2026 end</h1>
+      <p class="sub">Where four Nifty indices sit today versus their own trend growth since the 2024 peak.</p>
+    </div>
+    <button class="toggle" id="theme" aria-label="Toggle colour theme">Dark</button>
+  </header>
+
+  <details class="method" open>
+    <summary>How to read this dashboard <span class="chev">&#9662;</span></summary>
+    <div class="body">
+      <p class="lead">Each dial asks one question: has the index grown faster or slower than its own long-run rate since it last peaked?</p>
+      <p>Every one of these indices set an all-time high (ATH) in 2024 — about two years ago. If an index had simply kept compounding at its historical CAGR over those two years, it would now sit at its <span style="color:var(--trend)">trend value</span>:</p>
+      <div class="formula">trend value = 2024 ATH &times; (1 + CAGR)<sup>2</sup></div>
+      <p>The needle is the current market level. Reading it against the trend value tells you whether the index is running ahead of, or behind, its own historical growth path.</p>
+
+      <p class="lead">The three marks on each dial</p>
+      <dl>
+        <dt>Floor (left end)</dt><dd>20% below the 2024 ATH — the scale starts here; anything cheaper is off-scale.</dd>
+        <dt><span style="color:var(--ath)">ATH</span></dt><dd>the 2024 all-time high itself.</dd>
+        <dt><span style="color:var(--trend)">Trend</span></dt><dd>the ATH grown two years at the index's CAGR — the "fairly grown" level.</dd>
+      </dl>
+
+      <p class="lead">The colour bands</p>
+      <dl>
+        <dt><span class="chip" style="background:#3B6D11"></span>Deep green</dt><dd>at or below the 2024 ATH — hasn't even reclaimed its old peak.</dd>
+        <dt><span class="chip" style="background:#97C459"></span>Green</dt><dd>above the ATH but below the trend value — recovered, but hasn't outrun two years of expected growth.</dd>
+        <dt><span class="chip" style="background:#E24B4A"></span>Red</dt><dd>above the trend value — has grown faster than its own historical rate; running hot.</dd>
+      </dl>
+
+      <p class="lead">Reading it honestly</p>
+      <p>The trend line is anchored to a <em>cyclical peak</em>, so it sets an aggressive bar — a needle in green is not automatically an "undervalued" signal, it mostly reflects that the market has spent two years growing into its 2024 valuations. CAGR is the only adjustable input: change it to see how sensitive each reading is to the growth assumption. This is illustrative modelling, not investment advice.</p>
+    </div>
+  </details>
+
+  <div class="panel">
+    <div class="panel-h">CAGR is the only variable — 2024 ATH and current values are fixed</div>
+    <div class="row">
+      <div></div>
+      <div class="head" style="text-align:right">2024 ATH</div>
+      <div class="head" style="text-align:center">CAGR %</div>
+      <div class="head" style="text-align:right">Current</div>
+    </div>
+    <div id="inputs"></div>
+  </div>
+
+  <div class="grid" id="gauges"></div>
+
+  <div class="legend">
+    <span><span class="sw" style="background:#3B6D11"></span>at/below ATH</span>
+    <span><span class="sw" style="background:#97C459"></span>below trend</span>
+    <span><span class="sw" style="background:#E24B4A"></span>above trend</span>
+    <span><span class="tk" style="background:var(--ath)"></span>2024 ATH</span>
+    <span><span class="tk" style="background:var(--trend)"></span>trend value</span>
+  </div>
+
+  <div class="updated" id="updated"></div>
+
+  <p class="note">
+    Illustrative model, not investment advice. The trend value anchors on the 2024 cyclical
+    peak, so it reads high by construction. Smallcap 250 and Nifty 500 ATH anchors are
+    approximate pending exact NSE factsheet closes. CAGRs are price-return; to reason in
+    total-return terms, raise each CAGR and use TRI levels on both sides.
+  </p>
+</div>
+
+<script>
+const DATA=[
+  {name:"Nifty 50",cat:"Large cap",ath:26277.35,cagr:12.0,cur:24540,date:"8 Aug 2026"},
+  {name:"Nifty Midcap 100",cat:"Mid cap",ath:60925.95,cagr:16.0,cur:63880,date:"10 Aug 2026"},
+  {name:"Nifty Smallcap 250",cat:"Small cap",ath:17700,cagr:15.0,cur:18373,date:"10 Aug 2026"},
+  {name:"Nifty 500",cat:"Broad",ath:24800,cagr:13.0,cur:23300,date:"8 Aug 2026"}
+];
+const cx=120,cy=112,R=82;
+const fmt=n=>Math.round(n).toLocaleString('en-IN');
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const ang=f=>(180-f*180)*Math.PI/180;
+const polarF=(f,r=R)=>{const a=ang(f);return[cx+r*Math.cos(a),cy-r*Math.sin(a)];};
+function arcF(f0,f1,w,col){const[x0,y0]=polarF(f0),[x1,y1]=polarF(f1);
+  return `<path d="M ${x0.toFixed(1)} ${y0.toFixed(1)} A ${R} ${R} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}" fill="none" stroke="${col}" stroke-width="${w}"/>`;}
+function tickF(f,col){const a=ang(f),r1=R-11,r2=R+5;
+  return `<line x1="${(cx+r1*Math.cos(a)).toFixed(1)}" y1="${(cy-r1*Math.sin(a)).toFixed(1)}" x2="${(cx+r2*Math.cos(a)).toFixed(1)}" y2="${(cy-r2*Math.sin(a)).toFixed(1)}" stroke="${col}" stroke-width="2.5"/>`;}
+function lblF(f,val,col){const a=ang(f),c=Math.cos(a);const lx=cx+(R+13)*c,ly=cy-(R+13)*Math.sin(a);
+  const anc=c<-0.25?'end':(c>0.25?'start':'middle');
+  return `<text x="${lx.toFixed(1)}" y="${(ly+3).toFixed(1)}" text-anchor="${anc}" font-size="9.5" fill="${col}" font-family="var(--font-mono)">${fmt(val)}</text>`;}
+function gauge(d){
+  const min=0.8*d.ath, trend=d.ath*Math.pow(1+d.cagr/100,2), max=trend*1.10;
+  const fOf=v=>clamp((v-min)/(max-min),0,1);
+  const fAth=fOf(d.ath), fTr=fOf(trend), fCur=fOf(d.cur);
+  const[nx,ny]=polarF(fCur);
+  const gapTrend=(d.cur/trend-1)*100, vsAth=(d.cur/d.ath-1)*100;
+  const scol=d.cur<d.ath?"#2f6d10":(d.cur<trend?"#3B6D11":"#c0403f");
+  const svg=`<svg viewBox="0 0 240 138" width="100%" role="img" aria-label="${d.name} current ${fmt(d.cur)} on ${d.date}">
+    ${arcF(0,fAth,12,'#3B6D11')}${arcF(fAth,fTr,12,'#97C459')}${arcF(fTr,1,12,'#E24B4A')}
+    ${tickF(fAth,'var(--ath)')}${tickF(fTr,'var(--trend)')}
+    <text x="${(cx-R).toFixed(1)}" y="${(cy+16).toFixed(1)}" text-anchor="start" font-size="9.5" fill="var(--text-muted)" font-family="var(--font-mono)">${fmt(min)}</text>
+    ${lblF(fAth,d.ath,'var(--ath)')}${lblF(fTr,trend,'var(--trend)')}
+    <line x1="${cx}" y1="${cy}" x2="${nx.toFixed(1)}" y2="${ny.toFixed(1)}" stroke="var(--text-primary)" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="${cx}" cy="${cy}" r="5" fill="var(--text-primary)"/>
+    <text x="${cx}" y="86" text-anchor="middle" font-size="21" font-weight="500" fill="${scol}" font-family="var(--font-mono)">${fmt(d.cur)}</text>
+    <text x="${cx}" y="100" text-anchor="middle" font-size="9.5" fill="var(--text-muted)" font-family="var(--font-mono)">${d.date}</text>
+  </svg>`;
+  return `<div class="card">
+    <div class="card-h"><span class="nm">${d.name}</span><span class="ct">${d.cat}</span></div>
+    ${svg}
+    <div class="foot">${vsAth>=0?'+':''}${vsAth.toFixed(1)}% vs ATH · ${gapTrend>=0?'+':''}${gapTrend.toFixed(1)}% vs trend</div>
+  </div>`;
+}
+function inputRow(d,i){
+  return `<div class="row">
+    <span style="font-size:13px">${d.name}</span>
+    <span class="fixed">${fmt(d.ath)}</span>
+    <input type="number" step="0.5" value="${d.cagr}" data-i="${i}" aria-label="${d.name} CAGR">
+    <span class="fixed">${fmt(d.cur)}</span>
+  </div>`;
+}
+function render(){document.getElementById('gauges').innerHTML=DATA.map(gauge).join('');}
+document.getElementById('inputs').innerHTML=DATA.map(inputRow).join('');
+document.querySelectorAll('#inputs input').forEach(el=>el.addEventListener('input',e=>{
+  const i=+e.target.dataset.i,v=parseFloat(e.target.value);
+  if(!isNaN(v)){DATA[i].cagr=v;render();}
+}));
+const root=document.documentElement, tbtn=document.getElementById('theme');
+if(matchMedia('(prefers-color-scheme:dark)').matches){root.dataset.theme='dark';}
+function syncBtn(){tbtn.textContent=root.dataset.theme==='dark'?'Light':'Dark';}
+tbtn.addEventListener('click',()=>{root.dataset.theme=root.dataset.theme==='dark'?'light':'dark';syncBtn();render();});
+syncBtn();render();
+
+// Optional live data: if a data.json sits next to this file, use its current values.
+// Format: { "Nifty 50": {"cur": 24540, "date": "8 Aug 2026"}, ... }  plus optional "updated".
+fetch('data.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{
+  if(!j) return;
+  DATA.forEach(d=>{ if(j[d.name]){ if(j[d.name].cur!=null) d.cur=j[d.name].cur; if(j[d.name].date) d.date=j[d.name].date; }});
+  if(j.updated){ document.getElementById('updated').textContent='Data last updated: '+j.updated; }
+  render();
+}).catch(()=>{});
+</script>
+</body>
+</html>
