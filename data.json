@@ -1,7 +1,19 @@
 {
-  "Nifty 50": { "cur": 24540, "date": "8 Aug 2026" },
-  "Nifty Midcap 100": { "cur": 63880, "date": "10 Aug 2026" },
-  "Nifty Smallcap 250": { "cur": 18373, "date": "10 Aug 2026" },
-  "Nifty 500": { "cur": 23300, "date": "8 Aug 2026" },
-  "updated": "seed data"
+  "Nifty 50": {
+    "cur": 24447.85,
+    "date": "11 Aug 2026"
+  },
+  "Nifty Midcap 100": {
+    "cur": 63716.6,
+    "date": "11 Aug 2026"
+  },
+  "Nifty Smallcap 250": {
+    "cur": 18380.75,
+    "date": "11 Aug 2026"
+  },
+  "Nifty 500": {
+    "cur": 23657.95,
+    "date": "11 Aug 2026"
+  },
+  "updated": "11 Aug 2026 12:16 IST"
 }
