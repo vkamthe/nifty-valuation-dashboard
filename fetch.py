@@ -11,7 +11,8 @@ Design choices:
 Data source note:
 - Uses Yahoo Finance via yfinance — zero-auth and fine for a personal board, but an
   unofficial endpoint that can change or rate-limit. VERIFY each ticker resolves.
-  Confident: ^NSEI (Nifty 50), NIFTYSMLCAP250.NS (Smallcap 250).
+  Confident: ^NSEI (Nifty 50), NIFTYSMLCAP250.NS (Smallcap 250),
+  NIFTY_MICROCAP250.NS (Microcap 250).
   Double-check: NIFTY_MIDCAP_100.NS (Midcap 100), ^CRSLDX (Nifty 500) — Yahoo's
   Indian index symbols are inconsistent. If one returns empty, try the alternates
   listed beside it below.
@@ -29,6 +30,7 @@ TICKERS = {
     "Nifty 50":            "^NSEI",                 # alt: NIFTY_50.NS
     "Nifty Midcap 100":    "NIFTY_MIDCAP_100.NS",   # alt: ^CRSMID
     "Nifty Smallcap 250":  "NIFTYSMLCAP250.NS",     # alt: NIFTY_SMLCAP_250.NS
+    "Nifty Microcap 250":  "NIFTY_MICROCAP250.NS",  # alt: NIFTY_MICROCAP_250.NS
     "Nifty 500":           "^CRSLDX",               # alt: NIFTY_500.NS
 }
 

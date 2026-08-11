@@ -31,13 +31,16 @@
     border-radius:8px;padding:7px 12px;font-size:12px;cursor:pointer;font-family:inherit;white-space:nowrap}
   .toggle:hover{border-color:var(--border-strong)}
 
-  .method{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;
-    padding:0 1.15rem;margin-bottom:1.5rem}
-  .method summary{cursor:pointer;list-style:none;font-size:15px;font-weight:500;padding:1rem 0;
-    display:flex;align-items:center;justify-content:space-between}
-  .method summary::-webkit-details-marker{display:none}
-  .method summary .chev{color:var(--text-muted);font-size:13px;transition:transform .2s}
-  .method[open] summary .chev{transform:rotate(180deg)}
+  /* shared collapsible tiles */
+  details.tile{border-radius:12px;padding:0 1.15rem;margin-bottom:1.5rem}
+  details.tile > summary{cursor:pointer;list-style:none;display:flex;align-items:center;
+    justify-content:space-between;padding:1rem 0}
+  details.tile > summary::-webkit-details-marker{display:none}
+  details.tile > summary .chev{color:var(--text-muted);font-size:13px;transition:transform .2s;margin-left:12px}
+  details.tile[open] > summary .chev{transform:rotate(180deg)}
+
+  .method{background:var(--surface-2);border:1px solid var(--border)}
+  .method > summary{font-size:15px;font-weight:500}
   .method .body{padding:0 0 1.15rem;font-size:14px;color:var(--text-secondary);border-top:1px solid var(--border)}
   .method .body p{margin:.9rem 0 .4rem}
   .method .body .lead{color:var(--text-primary);margin-top:1rem}
@@ -48,15 +51,18 @@
   .formula{font-family:var(--font-mono);font-size:13px;background:var(--surface-1);
     border-radius:8px;padding:10px 12px;margin:.9rem 0;color:var(--text-primary);overflow-x:auto}
 
-  .panel{background:var(--surface-1);border-radius:12px;padding:1rem 1.15rem;margin-bottom:1.5rem}
-  .panel-h{font-size:13px;color:var(--text-secondary);margin-bottom:8px}
+  .assume{background:var(--surface-1)}
+  .assume > summary{font-size:13px;color:var(--text-secondary)}
+  .assume .body{padding:0 0 1.1rem;border-top:1px solid var(--border)}
   .row{display:grid;grid-template-columns:1.4fr 1fr .9fr 1fr;gap:8px 12px;align-items:center}
   .row .head{font-size:11px;color:var(--text-muted)}
-  .row + .row{margin-top:8px}
+  .row.data{margin-top:8px}
+  .row.headrow{margin-top:.9rem}
   .fixed{font-family:var(--font-mono);font-size:13px;text-align:right;color:var(--text-secondary)}
   input[type=number]{width:100%;height:34px;border:1px solid var(--border);background:var(--surface-2);
     color:var(--text-primary);border-radius:8px;text-align:center;font-family:var(--font-mono);font-size:13px;padding:0 6px}
   input[type=number]:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 22%,transparent)}
+
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
   .card{background:var(--surface-2);border:1px solid var(--border);border-radius:12px;padding:1rem 1.1rem}
   .card-h{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2px}
@@ -78,12 +84,12 @@
   <header>
     <div>
       <h1>Valuation till 2026 end</h1>
-      <p class="sub">Where four Nifty indices sit today versus their own trend growth since the 2024 peak.</p>
+      <p class="sub">Where five Nifty indices sit today versus their own trend growth since the 2024 peak.</p>
     </div>
     <button class="toggle" id="theme" aria-label="Toggle colour theme">Dark</button>
   </header>
 
-  <details class="method" open>
+  <details class="tile method" open>
     <summary>How to read this dashboard <span class="chev">&#9662;</span></summary>
     <div class="body">
       <p class="lead">Each dial asks one question: has the index grown faster or slower than its own long-run rate since it last peaked?</p>
@@ -110,16 +116,18 @@
     </div>
   </details>
 
-  <div class="panel">
-    <div class="panel-h">CAGR is the only variable — 2024 ATH and current values are fixed</div>
-    <div class="row">
-      <div></div>
-      <div class="head" style="text-align:right">2024 ATH</div>
-      <div class="head" style="text-align:center">CAGR %</div>
-      <div class="head" style="text-align:right">Current</div>
+  <details class="tile assume" open>
+    <summary>Assumptions — CAGR is the only variable; 2024 ATH and current are fixed <span class="chev">&#9662;</span></summary>
+    <div class="body">
+      <div class="row headrow">
+        <div></div>
+        <div class="head" style="text-align:right">2024 ATH</div>
+        <div class="head" style="text-align:center">CAGR %</div>
+        <div class="head" style="text-align:right">Current</div>
+      </div>
+      <div id="inputs"></div>
     </div>
-    <div id="inputs"></div>
-  </div>
+  </details>
 
   <div class="grid" id="gauges"></div>
 
@@ -135,9 +143,9 @@
 
   <p class="note">
     Illustrative model, not investment advice. The trend value anchors on the 2024 cyclical
-    peak, so it reads high by construction. Smallcap 250 and Nifty 500 ATH anchors are
-    approximate pending exact NSE factsheet closes. CAGRs are price-return; to reason in
-    total-return terms, raise each CAGR and use TRI levels on both sides.
+    peak, so it reads high by construction. Smallcap 250, Microcap 250 and Nifty 500 ATH
+    anchors are approximate pending exact NSE factsheet closes. CAGRs are price-return; to
+    reason in total-return terms, raise each CAGR and use TRI levels on both sides.
   </p>
 </div>
 
@@ -146,6 +154,7 @@ const DATA=[
   {name:"Nifty 50",cat:"Large cap",ath:26277.35,cagr:12.0,cur:24540,date:"8 Aug 2026"},
   {name:"Nifty Midcap 100",cat:"Mid cap",ath:60925.95,cagr:16.0,cur:63880,date:"10 Aug 2026"},
   {name:"Nifty Smallcap 250",cat:"Small cap",ath:17700,cagr:15.0,cur:18373,date:"10 Aug 2026"},
+  {name:"Nifty Microcap 250",cat:"Micro cap",ath:25000,cagr:17.0,cur:23900,date:"10 Aug 2026"},
   {name:"Nifty 500",cat:"Broad",ath:24800,cagr:13.0,cur:23300,date:"8 Aug 2026"}
 ];
 const cx=120,cy=112,R=82;
@@ -184,7 +193,7 @@ function gauge(d){
   </div>`;
 }
 function inputRow(d,i){
-  return `<div class="row">
+  return `<div class="row data">
     <span style="font-size:13px">${d.name}</span>
     <span class="fixed">${fmt(d.ath)}</span>
     <input type="number" step="0.5" value="${d.cagr}" data-i="${i}" aria-label="${d.name} CAGR">
