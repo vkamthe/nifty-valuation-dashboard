@@ -36,7 +36,7 @@
   details.tile > summary{cursor:pointer;list-style:none;display:flex;align-items:center;
     justify-content:space-between;padding:1rem 0}
   details.tile > summary::-webkit-details-marker{display:none}
-  details.tile > summary .chev{color:var(--text-muted);font-size:13px;transition:transform .2s;margin-left:12px}
+  details.tile > summary .chev{color:var(--text-secondary);font-size:22px;line-height:1;transition:transform .2s;margin-left:12px}
   details.tile[open] > summary .chev{transform:rotate(180deg)}
 
   .method{background:var(--surface-2);border:1px solid var(--border)}
@@ -207,7 +207,7 @@ document.querySelectorAll('#inputs input').forEach(el=>el.addEventListener('inpu
   if(!isNaN(v)){DATA[i].cagr=v;render();}
 }));
 const root=document.documentElement, tbtn=document.getElementById('theme');
-if(matchMedia('(prefers-color-scheme:dark)').matches){root.dataset.theme='dark';}
+// Default to light mode; users switch to dark with the toggle.
 function syncBtn(){tbtn.textContent=root.dataset.theme==='dark'?'Light':'Dark';}
 tbtn.addEventListener('click',()=>{root.dataset.theme=root.dataset.theme==='dark'?'light':'dark';syncBtn();render();});
 syncBtn();render();
