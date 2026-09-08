@@ -24,6 +24,7 @@ import json
 import os
 import datetime
 import yfinance as yf
+import pandas as pd
 
 # name -> primary ticker (alternates in comments if the primary comes back empty)
 TICKERS = {
@@ -48,16 +49,37 @@ def load_existing():
     return {}
 
 
+def get_return(series, cur_val, months):
+    target_date = series.index[-1] - pd.DateOffset(months=months)
+    past = series[:target_date]
+    if len(past):
+        past_val = float(past.iloc[-1])
+        return round((cur_val / past_val - 1) * 100, 2)
+    return None
+
+
 def main():
     out = load_existing()
     for name, sym in TICKERS.items():
         try:
-            series = yf.Ticker(sym).history(period="5d")["Close"].dropna()
+            series = yf.Ticker(sym).history(period="1y")["Close"].dropna()
             if len(series):
+                cur_val = float(series.iloc[-1])
                 out[name] = {
-                    "cur": round(float(series.iloc[-1]), 2),
+                    "cur": round(cur_val, 2),
                     "date": series.index[-1].strftime("%-d %b %Y"),
                 }
+                
+                ret1m = get_return(series, cur_val, 1)
+                ret3m = get_return(series, cur_val, 3)
+                ret6m = get_return(series, cur_val, 6)
+                ret1y = get_return(series, cur_val, 12)
+                
+                if ret1m is not None: out[name]["ret1m"] = ret1m
+                if ret3m is not None: out[name]["ret3m"] = ret3m
+                if ret6m is not None: out[name]["ret6m"] = ret6m
+                if ret1y is not None: out[name]["ret1y"] = ret1y
+                
                 print(f"OK    {name:20s} {sym:22s} -> {out[name]['cur']}")
             else:
                 print(f"WARN  {name} ({sym}) returned no rows; keeping previous value")

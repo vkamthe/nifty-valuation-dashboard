@@ -54,7 +54,7 @@
   .assume{background:var(--surface-1)}
   .assume > summary{font-size:13px;color:var(--text-secondary)}
   .assume .body{padding:0 0 1.1rem;border-top:1px solid var(--border)}
-  .row{display:grid;grid-template-columns:1.4fr 1fr .9fr 1fr;gap:8px 12px;align-items:center}
+  .row{display:grid;grid-template-columns:1.4fr 1fr .9fr 1.3fr;gap:8px 12px;align-items:center}
   .row .head{font-size:11px;color:var(--text-muted)}
   .row.data{margin-top:8px}
   .row.headrow{margin-top:.9rem}
@@ -69,6 +69,11 @@
   .card-h .nm{font-size:15px;font-weight:500}
   .card-h .ct{font-size:11px;color:var(--text-muted)}
   .foot{font-size:11px;color:var(--text-muted);margin-top:4px;text-align:center;font-family:var(--font-mono)}
+  .ret-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:1rem;padding-top:10px;border-top:1px solid var(--border);text-align:center;font-family:var(--font-mono)}
+  .ret-grid .rlbl{font-size:10px;color:var(--text-muted);margin-bottom:2px}
+  .ret-grid .rval{font-size:12px;font-weight:500}
+  .rpos{color:#3B6D11} .rneg{color:#E24B4A}
+  html[data-theme="dark"] .rpos{color:#97C459}
   .legend{display:flex;flex-wrap:wrap;gap:14px;margin-top:1.25rem;font-size:12px;color:var(--text-secondary)}
   .legend span{display:flex;align-items:center;gap:6px}
   .sw{width:12px;height:8px;border-radius:2px}
@@ -89,7 +94,7 @@
     <button class="toggle" id="theme" aria-label="Toggle colour theme">Dark</button>
   </header>
 
-  <details class="tile method" open>
+  <details class="tile method">
     <summary>How to read this dashboard <span class="chev">&#9662;</span></summary>
     <div class="body">
       <p class="lead">Each dial asks one question: has the index grown faster or slower than its own long-run rate since it last peaked?</p>
@@ -123,7 +128,7 @@
         <div></div>
         <div class="head" style="text-align:right">2024 ATH</div>
         <div class="head" style="text-align:center">CAGR %</div>
-        <div class="head" style="text-align:right">Current</div>
+        <div class="head" style="text-align:right">Date when CAGR was calculated</div>
       </div>
       <div id="inputs"></div>
     </div>
@@ -151,14 +156,16 @@
 
 <script>
 const DATA=[
-  {name:"Nifty 50",cat:"Large cap",ath:26277.35,cagr:12.0,cur:24540,date:"8 Aug 2026"},
-  {name:"Nifty Midcap 100",cat:"Mid cap",ath:60925.95,cagr:16.0,cur:63880,date:"10 Aug 2026"},
-  {name:"Nifty Smallcap 250",cat:"Small cap",ath:17700,cagr:15.0,cur:18373,date:"10 Aug 2026"},
-  {name:"Nifty Microcap 250",cat:"Micro cap",ath:25000,cagr:17.0,cur:23900,date:"10 Aug 2026"},
-  {name:"Nifty 500",cat:"Broad",ath:24800,cagr:13.0,cur:23300,date:"8 Aug 2026"}
+  {name:"Nifty 50",cat:"Large cap",ath:26277.35,cagr:12.0,cur:24540,date:"8 Aug 2026",ret1m:-1.2,ret3m:4.5,ret6m:8.9,ret1y:15.2},
+  {name:"Nifty Midcap 100",cat:"Mid cap",ath:60925.95,cagr:16.0,cur:63880,date:"10 Aug 2026",ret1m:2.1,ret3m:-1.0,ret6m:12.4,ret1y:22.1},
+  {name:"Nifty Smallcap 250",cat:"Small cap",ath:17700,cagr:15.0,cur:18373,date:"10 Aug 2026",ret1m:0.5,ret3m:5.2,ret6m:14.1,ret1y:28.5},
+  {name:"Nifty Microcap 250",cat:"Micro cap",ath:25000,cagr:17.0,cur:23900,date:"10 Aug 2026",ret1m:-2.5,ret3m:2.2,ret6m:10.5,ret1y:30.1},
+  {name:"Nifty 500",cat:"Broad",ath:24800,cagr:13.0,cur:23300,date:"8 Aug 2026",ret1m:-0.5,ret3m:3.8,ret6m:9.5,ret1y:17.4}
 ];
 const cx=120,cy=112,R=82;
 const fmt=n=>Math.round(n).toLocaleString('en-IN');
+const rfmt=v=>(v==null)?'--':(v>0?'+':'')+v.toFixed(1)+'%';
+const rcol=v=>(v==null)?'':(v>0?'rpos':'rneg');
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const ang=f=>(180-f*180)*Math.PI/180;
 const polarF=(f,r=R)=>{const a=ang(f);return[cx+r*Math.cos(a),cy-r*Math.sin(a)];};
@@ -190,6 +197,12 @@ function gauge(d){
     <div class="card-h"><span class="nm">${d.name}</span><span class="ct">${d.cat}</span></div>
     ${svg}
     <div class="foot">${vsAth>=0?'+':''}${vsAth.toFixed(1)}% vs ATH · ${gapTrend>=0?'+':''}${gapTrend.toFixed(1)}% vs trend</div>
+    <div class="ret-grid">
+      <div><div class="rlbl">1M</div><div class="rval ${rcol(d.ret1m)}">${rfmt(d.ret1m)}</div></div>
+      <div><div class="rlbl">3M</div><div class="rval ${rcol(d.ret3m)}">${rfmt(d.ret3m)}</div></div>
+      <div><div class="rlbl">6M</div><div class="rval ${rcol(d.ret6m)}">${rfmt(d.ret6m)}</div></div>
+      <div><div class="rlbl">1Y</div><div class="rval ${rcol(d.ret1y)}">${rfmt(d.ret1y)}</div></div>
+    </div>
   </div>`;
 }
 function inputRow(d,i){
@@ -216,7 +229,16 @@ syncBtn();render();
 // Format: { "Nifty 50": {"cur": 24540, "date": "8 Aug 2026"}, ... }  plus optional "updated".
 fetch('data.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{
   if(!j) return;
-  DATA.forEach(d=>{ if(j[d.name]){ if(j[d.name].cur!=null) d.cur=j[d.name].cur; if(j[d.name].date) d.date=j[d.name].date; }});
+  DATA.forEach(d=>{ 
+    if(j[d.name]){ 
+      if(j[d.name].cur!=null) d.cur=j[d.name].cur; 
+      if(j[d.name].date) d.date=j[d.name].date; 
+      d.ret1m=j[d.name].ret1m!=null?j[d.name].ret1m:null;
+      d.ret3m=j[d.name].ret3m!=null?j[d.name].ret3m:null;
+      d.ret6m=j[d.name].ret6m!=null?j[d.name].ret6m:null;
+      d.ret1y=j[d.name].ret1y!=null?j[d.name].ret1y:null;
+    }
+  });
   if(j.updated){ document.getElementById('updated').textContent='Data last updated: '+j.updated; }
   render();
 }).catch(()=>{});
