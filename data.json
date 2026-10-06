@@ -1,32 +1,32 @@
 {
   "Nifty 50": {
-    "cur": 22421.95,
-    "date": "1 Oct 2026",
-    "ret1m": -6.79,
-    "ret3m": -6.6,
-    "ret6m": -1.14
+    "cur": 22555.75,
+    "date": "5 Oct 2026",
+    "ret1m": -5.62,
+    "ret3m": -7.07,
+    "ret6m": -0.69
   },
   "Nifty Midcap 100": {
-    "cur": 59123.65,
-    "date": "5 Oct 2026"
+    "cur": 59761.2,
+    "date": "6 Oct 2026"
   },
   "Nifty Smallcap 250": {
-    "cur": 17589.05,
-    "date": "1 Oct 2026",
-    "ret1m": -4.22,
-    "ret3m": -1.19,
-    "ret6m": 19.26
+    "cur": 17655.35,
+    "date": "5 Oct 2026",
+    "ret1m": -4.47,
+    "ret3m": -1.89,
+    "ret6m": 19.9
   },
   "Nifty Microcap 250": {
-    "cur": 25912.85,
-    "date": "5 Oct 2026"
+    "cur": 26254.45,
+    "date": "6 Oct 2026"
   },
   "Nifty 500": {
-    "cur": 21857.75,
-    "date": "1 Oct 2026",
-    "ret1m": -6.35,
-    "ret3m": -5.43,
-    "ret6m": 4.41
+    "cur": 21971.6,
+    "date": "5 Oct 2026",
+    "ret1m": -5.52,
+    "ret3m": -5.71,
+    "ret6m": 4.93
   },
-  "updated": "6 Oct 2026 02:29 IST"
+  "updated": "7 Oct 2026 00:19 IST"
 }
