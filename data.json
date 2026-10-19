@@ -4,32 +4,29 @@
     "date": "16 Oct 2026",
     "ret1m": -0.31,
     "ret3m": -3.85,
-    "ret6m": -4.34,
-    "ret1y": -9.53
+    "ret6m": -4.34
   },
   "Nifty Midcap 100": {
-    "cur": 59129.75,
-    "date": "16 Oct 2026"
+    "cur": 58487.95,
+    "date": "19 Oct 2026"
   },
   "Nifty Smallcap 250": {
     "cur": 17637.65,
     "date": "16 Oct 2026",
     "ret1m": -1.26,
     "ret3m": -2.6,
-    "ret6m": 8.88,
-    "ret1y": 3.04
+    "ret6m": 8.88
   },
   "Nifty Microcap 250": {
-    "cur": 25735.85,
-    "date": "16 Oct 2026"
+    "cur": 25306.15,
+    "date": "19 Oct 2026"
   },
   "Nifty 500": {
     "cur": 22270.05,
     "date": "16 Oct 2026",
     "ret1m": -1.16,
     "ret3m": -4.14,
-    "ret6m": -1.7,
-    "ret1y": -5.49
+    "ret6m": -1.7
   },
-  "updated": "16 Oct 2026 22:41 IST"
+  "updated": "20 Oct 2026 00:35 IST"
 }
