@@ -7,8 +7,8 @@
     "ret6m": 3.59
   },
   "Nifty Midcap 100": {
-    "cur": 61022.55,
-    "date": "9 Nov 2026"
+    "cur": 61519.1,
+    "date": "11 Nov 2026"
   },
   "Nifty Smallcap 250": {
     "cur": 17577.0,
@@ -18,8 +18,8 @@
     "ret6m": 0.8
   },
   "Nifty Microcap 250": {
-    "cur": 25161.4,
-    "date": "9 Nov 2026"
+    "cur": 25632.45,
+    "date": "11 Nov 2026"
   },
   "Nifty 500": {
     "cur": 23567.0,
@@ -28,5 +28,5 @@
     "ret3m": -0.61,
     "ret6m": 1.95
   },
-  "updated": "11 Nov 2026 01:47 IST"
+  "updated": "12 Nov 2026 01:31 IST"
 }
